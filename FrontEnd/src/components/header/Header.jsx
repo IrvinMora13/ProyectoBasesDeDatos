@@ -2,7 +2,11 @@ import './header.css';
 
 const Header = () => {
     return(
-        <div>hhhhhhhhhhhhhhhhhhhhhhhhhhhh</div>
+        <div className='header'>
+            <div className='headerData'>
+                Bases de datos juegos
+            </div>
+        </div>
     )  
 }
 
