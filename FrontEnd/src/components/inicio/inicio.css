@@ -1,3 +1,7 @@
+.inicio {
+    display: flex;
+    flex-direction: column;
+}
 .heists {
     width: 100%;
     text-align: center;
@@ -11,43 +15,21 @@
 }
 .parte_media {
     display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-    margin-left: 20px; 
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin: 20px;
 }
-.imagen_s {
+.parte_media img {
+    object-fit: cover;
+    height: 20rem;
+    width: 20rem;
+    margin: 5rem;
+}
+
+.disImg {
     display: flex;
-    flex-direction: column; 
-    margin-top: 200px;
-    margin-left: 10px;
-    font-family: Arial;
-}
-.imagen_s img {
-    width: 300px; 
-    height: auto;
-}
-
-p {
-    color: rgb(0, 0, 0);
-    text-align: center;
-}
-
-.links{
-    color: rgb(0, 0, 0);
-    text-align: center;
-    margin-top: 10px;
-    font-size: 30px;
-}
-
-.parte_baja {
-    width: 100%;
-    text-align: center;
-}
-
-.imagen_i img {
-    padding-top: 150px;
-    width: 50%;
-    height: auto;
-    display: block;
-    margin: 0 auto;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
 }

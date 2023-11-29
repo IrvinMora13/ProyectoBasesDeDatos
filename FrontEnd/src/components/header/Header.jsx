@@ -4,7 +4,7 @@ const Header = () => {
     return(
         <div className='header'>
             <div className='headerData'>
-                Bases de datos juegos
+                Bases de datos Payday
             </div>
         </div>
     )  
