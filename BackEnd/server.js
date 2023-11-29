@@ -1,8 +1,11 @@
 const express = require('express');
 const oracledb = require('oracledb');
+const cors = require('cors');
 
 const app = express();
 const port = 3001;
+
+app.use(cors());
 
 const dbConfig = {
   user: 'Hr',
