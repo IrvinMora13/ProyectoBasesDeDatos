@@ -24,18 +24,25 @@ app.get('/api/data/:category', async (req, res) => {
     const { category } = req.params;
   
     try {
-      const connection = await oracledb.getConnection(dbConfig);
-      const result = await connection.execute(`SELECT * FROM ${category}`);
+        
+        const connection = await oracledb.getConnection(dbConfig);
+        const allowedCategories = ['Skills', 'Weapons', 'Loadout', 'UserTrials'];
+
+        if (!allowedCategories.includes(category)) {
+        res.status(400).send('Categoría no válida');
+        return;
+        }
+        const result = await connection.execute(`SELECT * FROM ${category}`);
 
   
-      console.log('Consulta ejecutada con éxito');
-      await connection.close();
-      console.log('Conexión cerrada correctamente');
-      res.json(result.rows);
+        console.log('Consulta ejecutada con éxito');
+        await connection.close();
+        console.log('Conexión cerrada correctamente');
+        res.json(result.rows);
       
-    } catch (error) {
-      console.error('Error al conectar a la base de datos:', error.message);
-      res.status(500).send('Error interno del servidor');
+    }   catch (error) {
+        console.error('Error al conectar a la base de datos:', error.message);
+        res.status(500).send('Error interno del servidor');
     }
 });
 
