@@ -12,7 +12,6 @@ const Inicio = () => {
           const response = await fetch('http://localhost:3001/api/data');
           const data = await response.json();
           setSkillsData(data);
-          console.log('Datos desde el servidor:', data);
         } catch (error) {
           console.error('Error al obtener datos del servidor:', error);
         }
@@ -32,7 +31,7 @@ const Inicio = () => {
                 </Link>
                     <span className="links">Skills</span>
                     {/* Aqui se muestra el dato obtenido de la base de datos*/}
-                    <p>{skillsData.length > 3 && `ID de la Cuarta Skill: ${skillsData[3][1]}`}</p>
+                    <p>{skillsData.length > 3 && `ID de la Cuarta Skill: ${skillsData[3][2]}`}</p>
                 <Link to="/Weapons"> 
                     <img src="/armas.jpg" alt=""/>
                 </Link>
