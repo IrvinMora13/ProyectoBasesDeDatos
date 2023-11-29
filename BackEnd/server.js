@@ -8,8 +8,8 @@ const port = 3001;
 app.use(cors());
 
 const dbConfig = {
-  user: 'Hr',
-  password: 'Hr',
+  user: 'Payday',
+  password: 'Payday',
   connectString: 'localhost:1521/xepdb1',
 
   events: true,
