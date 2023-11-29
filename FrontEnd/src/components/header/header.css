@@ -1,5 +1,8 @@
 .header {
+    padding: 20px;
     display: flex;
     justify-content: center; 
     align-items: center;
+    background-color: rgb(32, 32, 32);
+    font-size: 30px;
 }
