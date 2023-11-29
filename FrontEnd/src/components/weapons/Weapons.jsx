@@ -3,8 +3,10 @@ import './weapons.css';
 
 const Weapons = () => {
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -13,6 +15,7 @@ const Weapons = () => {
         const result = await response.json();
         setData(result);
         setLoading(false);
+        setFilteredData(result); 
       } catch (error) {
         console.error('Error al obtener datos del servidor:', error);
         setError('Error al obtener datos del servidor');
@@ -23,9 +26,28 @@ const Weapons = () => {
     fetchData();
   }, []);
 
+  const handleSearchWeapons = () => {
+    const filtered = data.filter(item =>
+      Object.values(item).some(value =>
+        (typeof value === 'string' || typeof value === 'number') &&
+        value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+    setFilteredData(filtered);
+  };
+
   return (
     <div>
       <h1>Weapons Data Table</h1>
+      <div>
+        <label>Buscar Arma: </label>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button onClick={handleSearchWeapons}>Buscar</button>
+      </div>
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
@@ -45,7 +67,7 @@ const Weapons = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map((item) => (
+            {filteredData.map((item) => (
               <tr key={item[0]}>
                 <td>{item[0]}</td>
                 <td>{item[1]}</td>

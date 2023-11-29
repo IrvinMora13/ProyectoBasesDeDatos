@@ -3,8 +3,10 @@ import './skills.css';
 
 const Skills = () => {
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -12,7 +14,8 @@ const Skills = () => {
         const response = await fetch('http://localhost:3001/api/data/Skills');
         const result = await response.json();
         setData(result);
-        setLoading(false); 
+        setLoading(false);
+        setFilteredData(result); 
       } catch (error) {
         console.error('Error al obtener datos del servidor:', error);
         setError('Error al obtener datos del servidor');
@@ -23,9 +26,28 @@ const Skills = () => {
     fetchData();
   }, []);
 
+  const handleSearchSkills = () => {
+    const filtered = data.filter(item =>
+      Object.values(item).some(value =>
+        (typeof value === 'string' || typeof value === 'number') &&
+        value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+    setFilteredData(filtered);
+  };
+
   return (
     <div>
-      <h1>Tabla de Datos</h1>
+      <h1>Skills Data Table</h1>
+      <div>
+        <label>Buscar Skill: </label>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button onClick={handleSearchSkills}>Buscar</button>
+      </div>
       {loading ? (
         <p>Cargando...</p>
       ) : error ? (
@@ -40,7 +62,7 @@ const Skills = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map((item) => (
+            {filteredData.map((item) => (
               <tr key={item[0]}>
                 <td>{item[0]}</td>
                 <td>{item[1]}</td>
