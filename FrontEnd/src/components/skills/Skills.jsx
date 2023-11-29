@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import './skills.css'
+import './skills.css';
 
 const Skills = () => {
-  const [data, setData] = useState([{id:1234, nombre:'Hola', tree:'abcd'}]);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-    // Aquí deberías realizar la lógica para obtener datos de la base de datos y actualizar el estado 'data'.
-    // Por ejemplo, puedes usar fetch() para hacer una solicitud a una API.
-    // La siguiente línea es un ejemplo ficticio:
-    // fetch('url_de_tu_api').then(response => response.json()).then(data => setData(data));
-  }, []); // El segundo parámetro [] significa que este efecto se ejecuta solo al montar el componente.
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/data/Skills');
+        const result = await response.json();
+        setData(result);
+      } catch (error) {
+        console.error('Error al obtener datos del servidor:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div>
@@ -24,11 +31,11 @@ const Skills = () => {
         </thead>
         <tbody>
           {/* Mapea los datos para crear filas en la tabla */}
-          {data.map(item => (
-            <tr key={item.id}>
-              <td>{item.id}</td>
-              <td>{item.nombre}</td>
-              <td>{item.tree}</td>
+          {data.map((item) => (
+            <tr key={item[0]}>
+              <td>{item[0]}</td>
+              <td>{item[1]}</td>
+              <td>{item[2]}</td>
             </tr>
           ))}
         </tbody>
