@@ -1,12 +1,11 @@
+import React from "react";
 import './App.css';
-import Header from './components/header/Header';
-import Inicio from './components/inicio/Inicio';
+import AppRoutes from "./routes/Routes";
 
 function App() {
   return (
-    <div>
-      <Header />
-      <Inicio />
+    <div className='App'>
+      <AppRoutes />
     </div>
   );
 }
