@@ -28,13 +28,13 @@ const Inicio = () => {
                         <img src="/loadout.jpg" alt=""/>
                         <span className="links">Loadout</span>
                     </div>                     
-                </Link>                  
-                <Link to="/UserTrials">
+                </Link> 
+                {/*<Link to="/UserTrials">
                     <div className="disImg">
                         <img src="/records.jpg" alt=""/>
                         <span className="links">UserTrials</span>
                     </div>                   
-                </Link>                  
+                </Link>*/}                                   
             </div>
         </div>
     );

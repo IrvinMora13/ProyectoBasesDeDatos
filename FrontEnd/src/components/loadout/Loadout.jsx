@@ -5,25 +5,24 @@ const Loadout = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const [loadoutID, setLoadoutID] = useState('');
   const [type, setType] = useState('');
-  const [outfitID, setOutfitID] = useState('');
-  const [skillID, setSkillID] = useState('');
-  const [weaponID, setWeaponID] = useState('');
+  const [outfitIDs, setOutfitIDs] = useState([]);
+  const [skillIDs, setSkillIDs] = useState([]);
+  const [weaponIDs, setWeaponIDs] = useState([]);
 
-  // Datos para las opciones de Outfit ID
   const [outfitOptions, setOutfitOptions] = useState([]);
+  const [skillOptions, setSkillOptions] = useState([]);
+  const [weaponOptions, setWeaponOptions] = useState([]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = {
-      loadoutID,
+      loadoutID: data.length + 1,
       type,
-      outfitID,
-      skillID,
-      weaponID,
+      outfitIDs,
+      skillIDs,
+      weaponIDs,
     };
 
     try {
@@ -58,19 +57,33 @@ const Loadout = () => {
     }
   };
 
-  const fetchOutfitOptions = async () => {
+  const fetchOptions = async (tableName, setOptionsFunction) => {
     try {
-      const response = await fetch('http://localhost:3001/api/data/Outfit');
+      const response = await fetch(`http://localhost:3001/api/data/${tableName}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
       const result = await response.json();
-      setOutfitOptions(result.map(item => item.Outfit_ID));
+      console.log(`Options for ${tableName}:`, result);
+  
+      if (Array.isArray(result)) {
+        const ids = result.map(item => item[`${tableName}ID`]);
+        console.log(`IDs for ${tableName}:`, ids);
+        setOptionsFunction(ids);
+      } else {
+        console.error(`Invalid response format for ${tableName}. Expected an array.`);
+      }
     } catch (error) {
-      console.error('Error al obtener opciones de Outfit ID:', error);
+      console.error(`Error fetching ${tableName} options:`, error.message);
     }
   };
 
   useEffect(() => {
     fetchData();
-    fetchOutfitOptions();
+    fetchOptions('Outfit', setOutfitOptions);
+    fetchOptions('Skills', setSkillOptions);
+    fetchOptions('Weapons', setWeaponOptions);
   }, []);
 
   return (
@@ -80,28 +93,60 @@ const Loadout = () => {
       <form onSubmit={handleSubmit}>
         <label>
           Loadout ID:
-          <input type="text" value={loadoutID} onChange={(e) => setLoadoutID(e.target.value)} required />
+          <input type="text" value={data.length + 1} readOnly />
         </label>
         <label>
           Type:
-          <input type="text" value={type} onChange={(e) => setType(e.target.value)} required />
+          <select value={type} onChange={(e) => setType(e.target.value)} required>
+            <option value="">Seleccionar...</option>
+            <option value="Stealth">Stealth</option>
+            <option value="Loud">Loud</option>
+          </select>
         </label>
         <label>
           Outfit ID:
-          <select value={outfitID} onChange={(e) => setOutfitID(e.target.value)} required>
-            <option value="">Seleccionar...</option>
-            {outfitOptions.map(option => (
-              <option key={option} value={option} selected={outfitID === option}>{option}</option>
+          <select className='select'
+            multiple
+            value={outfitIDs}
+            onChange={(e) => setOutfitIDs(Array.from(e.target.selectedOptions, option => option.value))}
+            required
+          >
+            {outfitOptions.map((option, index) => (
+              <option key={`${option}-${index}`} value={option}>
+                {option}
+              </option>
+            ))}
+        </select>
+        </label>
+        <label>
+          Skill ID:
+          <select className='select'
+            multiple
+            defaultValue={skillIDs}
+            onChange={(e) => setSkillIDs(Array.from(e.target.selectedOptions, option => option.value))}
+            required
+          >
+            {skillOptions.map((option, index) => (
+              <option key={`${option}-${index}`} value={option}>
+                {option}
+              </option>
             ))}
           </select>
         </label>
         <label>
-          Skill ID:
-          <input type="text" value={skillID} onChange={(e) => setSkillID(e.target.value)} required />
-        </label>
-        <label>
           Weapon ID:
-          <input type="text" value={weaponID} onChange={(e) => setWeaponID(e.target.value)} required />
+          <select className='select'
+              multiple
+              value={weaponIDs}
+              onChange={(e) => setWeaponIDs(Array.from(e.target.selectedOptions, option => option.value))}
+              required
+            >
+              {weaponOptions.map((option, index) => (
+              <option key={`${option}-${index}`} value={option}>
+                {option}
+              </option>
+            ))}
+        </select>
         </label>
         <button type="submit">Registrar</button>
       </form>
@@ -123,12 +168,12 @@ const Loadout = () => {
           </thead>
           <tbody>
             {data.map((item) => (
-              <tr key={item[0]}>
-                <td>{item[0]}</td>
-                <td>{item[1]}</td>
-                <td>{item[2]}</td>
-                <td>{item[3]}</td>
-                <td>{item[4]}</td>
+              <tr key={item.loadoutID}>
+                <td>{item.loadoutID}</td>
+                <td>{item.type}</td>
+                <td>{item.outfitID}</td>
+                <td>{item.skillID}</td>
+                <td>{item.weaponID}</td>
               </tr>
             ))}
           </tbody>

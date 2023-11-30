@@ -7,6 +7,16 @@ const Weapons = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [formData, setFormData] = useState({
+    WeaponsId: '',
+    WeaponsName: '',
+    Damage: '',
+    Magazine: '',
+    Recoil: '',
+    Stability: '',
+    Accuracy: '',
+    FIRING_MODE: ''
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -15,7 +25,7 @@ const Weapons = () => {
         const result = await response.json();
         setData(result);
         setLoading(false);
-        setFilteredData(result); 
+        setFilteredData(result);
       } catch (error) {
         console.error('Error al obtener datos del servidor:', error);
         setError('Error al obtener datos del servidor');
@@ -36,6 +46,46 @@ const Weapons = () => {
     setFilteredData(filtered);
   };
 
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const response = await fetch('http://localhost:3001/api/data/Weapons', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        fetchData();
+
+        setFormData({
+          WeaponsId: '',
+          WeaponsName: '',
+          Damage: '',
+          Magazine: '',
+          Recoil: '',
+          Stability: '',
+          Accuracy: '',
+          FIRING_MODE: ''
+        });
+      } else {
+        console.error('Error al enviar datos:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error al enviar datos:', error);
+    }
+  };
+
   return (
     <div>
       <h1>Weapons Data Table</h1>
@@ -48,6 +98,67 @@ const Weapons = () => {
         />
         <button onClick={handleSearchWeapons}>Buscar</button>
       </div>
+      {/* Formulario para agregar nuevos datos */}
+      <form onSubmit={handleSubmit}>
+      <label>Weapons ID:</label>
+        <input
+          type="number"
+          name="WeaponsId"
+          value={formData.WeaponsId}
+          onChange={handleInputChange}
+        />
+        <label>Weapons Name:</label>
+        <input
+          type="text"
+          name="WeaponsName"
+          value={formData.WeaponsName}
+          onChange={handleInputChange}
+        />
+        <label>Damage:</label>
+        <input
+          type="number"
+          name="Damage"
+          value={formData.Damage}
+          onChange={handleInputChange}
+        />
+        <label>Magazine:</label>
+        <input
+          type="text"
+          name="Magazine"
+          value={formData.Magazine}
+          onChange={handleInputChange}
+        />
+        <label>Recoil:</label>
+        <input
+          type="text"
+          name="Recoil"
+          value={formData.Recoil}
+          onChange={handleInputChange}
+        />
+        <label>Stability:</label>
+        <input
+          type="text"
+          name="Stability"
+          value={formData.Stability}
+          onChange={handleInputChange}
+        />
+        <label>Accuracy:</label>
+        <input
+          type="text"
+          name="Accuracy"
+          value={formData.Accuracy}
+          onChange={handleInputChange}
+        />
+        <label>FiringMode:</label>
+        <input
+          type="text"
+          name="FiringMode"
+          value={formData.FiringMode}
+          onChange={handleInputChange}
+        />
+        {/* Agrega los demás campos del formulario según tus necesidades */}
+        <button type="submit">Agregar</button>
+      </form>
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
